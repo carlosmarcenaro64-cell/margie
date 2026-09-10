@@ -296,7 +296,7 @@
                                         Solicitar Vela Personalizada
                                         <i class="fas fa-arrow-right"></i>
                                     </button>
-                                    <p class="text-xs text-gray-400 mt-3 text-center">En celulares compatibles, la imagen se compartirá como archivo real junto con tu solicitud. En iPhone también convertimos HEIC a JPG automáticamente.</p>
+                                    <p class="text-xs text-gray-400 mt-3 text-center">La imagen de referencia se enviará después en este mismo chat de WhatsApp.</p>
                                 </div>
                             </form>
                         </div>
@@ -334,7 +334,7 @@
 
                                 <p class="text-xs text-gray-500 mt-4 flex items-center gap-2">
                                     <i class="fab fa-whatsapp text-lg"></i>
-                                    En celulares compatibles, la imagen se enviará como archivo real desde la ventana de compartir.
+                                    La imagen de referencia se enviará después en este mismo chat.
                                 </p>
                             </div>
                         </div>
@@ -590,26 +590,7 @@
 
     <!-- Contenedor de Toasts (Notificaciones) -->
     <div id="toast-container"></div>
-
-    <!-- Conversor HEIC/HEIF para poder compartir fotos de iPhone en WhatsApp -->
-    <script>
-        let heic2anyPromise = null;
-        function loadHeicConverter() {
-            if (window.heic2any) return Promise.resolve(window.heic2any);
-            if (heic2anyPromise) return heic2anyPromise;
-
-            heic2anyPromise = new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = 'https://unpkg.com/heic2any@0.0.4/dist/heic2any.min.js';
-                script.onload = () => window.heic2any ? resolve(window.heic2any) : reject(new Error('HEIC converter unavailable'));
-                script.onerror = () => reject(new Error('Could not load HEIC converter'));
-                document.head.appendChild(script);
-            });
-            return heic2anyPromise;
-        }
-    </script>
-
-    <!-- ========================================== -->
+<!-- ========================================== -->
     <!-- LOGICA JAVASCRIPT -->
     <!-- ========================================== -->
     <script>
@@ -1224,137 +1205,27 @@
             const [year, month, day] = deliveryDate.split('-');
             const formattedDate = `${day}/${month}/${year}`;
 
+            // Número fijo de MARGIE CANDLES.
+            const whatsappNumber = '50374750007';
+
             let message = `Hola MARGIE CANDLES, quiero solicitar una vela personalizada:\n\n`;
             message += `🎁 *Propósito / Ocasión:* ${purpose}\n`;
             message += `🕯️ *Tamaño:* ${size}\n`;
             message += `🌸 *Aroma:* ${aroma}\n`;
             message += `📦 *Unidades requeridas:* ${quantity}\n`;
             message += `📅 *Fecha de entrega:* ${formattedDate}\n`;
-            message += `🖼️ *Imagen de referencia:* ${imageFile ? imageFile.name : 'No se adjuntó imagen'}\n`;
 
-            const btn = document.getElementById('custom-submit-btn');
-            const originalHTML = btn ? btn.innerHTML : '';
-
-            // En teléfonos, algunos formatos (especialmente HEIC/HEIF de iPhone)
-            // no pasan directamente por Web Share. Convertimos la imagen a JPEG
-            // dentro del navegador y después compartimos el archivo REAL.
-            async function prepareImageForWhatsApp(file) {
-                if (!file) return null;
-
-                const isHeic = /heic|heif/i.test(file.type || '') || /\.(heic|heif)$/i.test(file.name || '');
-                if (!isHeic && /^image\/(jpeg|png|webp)$/i.test(file.type)) {
-                    return file;
-                }
-
-                if (isHeic) {
-                    try {
-                        const converter = await loadHeicConverter();
-                        const converted = await converter({
-                            blob: file,
-                            toType: 'image/jpeg',
-                            quality: 0.9
-                        });
-
-                        const blob = Array.isArray(converted) ? converted[0] : converted;
-                        if (blob) {
-                            return new File([blob], 'imagen-referencia.jpg', { type: 'image/jpeg' });
-                        }
-                    } catch (err) {
-                        console.error('No se pudo convertir HEIC/HEIF:', err);
-                    }
-                }
-
-                // Para otros formatos que el navegador pueda decodificar.
-                try {
-                    const objectUrl = URL.createObjectURL(file);
-                    const img = new Image();
-
-                    await new Promise((resolve, reject) => {
-                        img.onload = resolve;
-                        img.onerror = reject;
-                        img.src = objectUrl;
-                    });
-
-                    const maxSide = 2000;
-                    const scale = Math.min(1, maxSide / Math.max(img.naturalWidth, img.naturalHeight));
-                    const canvas = document.createElement('canvas');
-                    canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
-                    canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    URL.revokeObjectURL(objectUrl);
-
-                    const blob = await new Promise(resolve =>
-                        canvas.toBlob(resolve, 'image/jpeg', 0.9)
-                    );
-
-                    if (blob) return new File([blob], 'imagen-referencia.jpg', { type: 'image/jpeg' });
-                } catch (err) {
-                    console.warn('No fue posible convertir la imagen:', err);
-                }
-
-                return file;
+            if (imageFile) {
+                message += `🖼️ *Imagen de referencia:* Te la enviaré en este mismo chat después de enviar la solicitud.`;
+            } else {
+                message += `🖼️ *Imagen de referencia:* No se adjuntó imagen.`;
             }
 
-            if (imageFile && navigator.share) {
-                if (btn) {
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fas fa-share-alt mr-2"></i> Preparando imagen...';
-                }
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
-                try {
-                    const shareFile = await prepareImageForWhatsApp(imageFile);
-
-                    if (!shareFile) {
-                        throw new Error('No se pudo preparar la imagen.');
-                    }
-
-                    // Compartimos el archivo REAL. En Android/iPhone el usuario
-                    // verá la hoja nativa y podrá elegir WhatsApp.
-                    if (navigator.canShare && navigator.canShare({ files: [shareFile] })) {
-                        await navigator.share({
-                            text: message,
-                            files: [shareFile]
-                        });
-                        showToast('¡Listo! La imagen va adjunta al compartir en WhatsApp.');
-                        return;
-                    }
-
-                    // Intento adicional para navegadores que no implementan canShare
-                    // correctamente, pero sí aceptan archivos.
-                    try {
-                        await navigator.share({
-                            text: message,
-                            files: [shareFile]
-                        });
-                        showToast('¡Listo! La imagen va adjunta al compartir en WhatsApp.');
-                        return;
-                    } catch (shareError) {
-                        console.warn('El navegador rechazó el archivo:', shareError);
-                    }
-
-                    // No abrimos api.whatsapp.com con la falsa impresión de que
-                    // llevará la foto. Mostramos una instrucción clara.
-                    showToast('Tu navegador no permite enviar archivos directamente a WhatsApp. Prueba Chrome en Android o Safari en iPhone.');
-                    return;
-
-                } catch (error) {
-                    if (error?.name === 'AbortError') return;
-                    console.error('Error al compartir imagen:', error);
-                    showToast('No se pudo compartir la imagen. Prueba seleccionándola en JPG o PNG.');
-                    return;
-                } finally {
-                    if (btn) {
-                        btn.disabled = false;
-                        btn.innerHTML = originalHTML;
-                    }
-                }
-            }
-
-            // Si no hay imagen, sí usamos el enlace normal de WhatsApp.
-            const whatsappUrl = `https://wa.me/50374750007?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
+            // Funciona tanto en PC como en teléfono y no depende de que el
+            // número esté guardado en los contactos.
+            window.location.href = whatsappUrl;
         }
 
         function handleCheckout(e) {
