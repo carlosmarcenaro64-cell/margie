@@ -497,6 +497,7 @@
                         <h3 class="font-serif text-xl text-brand-brown mb-4 border-b pb-2">Resumen del Pedido</h3>
                         <div class="space-y-3 text-sm text-gray-600 mb-4 pb-4 border-b">
                             <div class="flex justify-between"><span>Subtotal:</span> <span id="cart-subtotal">$0.00</span></div>
+                            <div class="flex justify-between"><span>Envío:</span> <span id="cart-shipping">Se calcula al elegir el lugar</span></div>
                             <div class="flex justify-between text-brand-gold"><span>Descuento:</span> <span id="cart-discount">-$0.00</span></div>
                         </div>
                         <div class="flex justify-between text-lg font-bold text-brand-brown mb-6">
@@ -529,10 +530,11 @@
                             <label class="block text-sm text-gray-600 mb-1">Punto de Entrega / Dirección</label>
                             <select id="checkout-address" required class="w-full p-2 border border-gray-200 rounded focus:border-brand-gold focus:outline-none bg-white text-gray-700">
                                 <option value="" disabled selected>Selecciona un punto de entrega...</option>
-                                <option value="Metrocentro">Metrocentro</option>
-                                <option value="Metrosur">Metrosur</option>
-                                <option value="Galerías">Galerías</option>
+                                <option value="Metrocentro" data-shipping="1.50">Metrocentro — Envío $1.50</option>
+                                <option value="Metrosur" data-shipping="1.50">Metrosur — Envío $1.50</option>
+                                <option value="Galerías" data-shipping="3.00">Galerías — Envío $3.00</option>
                             </select>
+                            <p class="text-xs text-gray-500 mt-2">Costo de envío: Metrocentro $1.50 · Metrosur $1.50 · Galerías $3.00</p>
                         </div>
                     </div>
 
@@ -547,9 +549,19 @@
                         </label>
                     </div>
 
-                    <div class="bg-brand-light p-4 rounded mb-6 text-sm text-gray-600 flex justify-between items-center border border-brand-beige">
-                        <span>Total a pagar:</span>
-                        <span id="checkout-total" class="font-bold text-brand-brown text-lg"></span>
+                    <div class="bg-brand-light p-4 rounded mb-6 text-sm text-gray-600 border border-brand-beige">
+                        <div class="flex justify-between items-center">
+                            <span>Subtotal:</span>
+                            <span id="checkout-subtotal" class="font-semibold text-brand-brown">$0.00</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-2">
+                            <span>Envío:</span>
+                            <span id="checkout-shipping" class="font-semibold text-brand-brown">$0.00</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-3 pt-3 border-t border-brand-beige text-base">
+                            <span>Total a pagar:</span>
+                            <span id="checkout-total" class="font-bold text-brand-brown text-lg">$0.00</span>
+                        </div>
                     </div>
 
                     <button type="submit" class="w-full bg-brand-gold hover:bg-brand-goldhover text-white px-4 py-4 rounded-sm uppercase tracking-wider font-bold transition-colors">Confirmar Pedido</button>
@@ -1012,12 +1024,38 @@
             }
         }
 
-        function renderCheckoutView() {
-            let total = state.cart.reduce((sum, item) => {
+        function getCheckoutShippingCost() {
+            const select = document.getElementById('checkout-address');
+            if (!select) return 0;
+            return parseFloat(select.selectedOptions?.[0]?.dataset?.shipping || '0') || 0;
+        }
+
+        function updateCheckoutTotal() {
+            const subtotal = state.cart.reduce((sum, item) => {
                 const prod = productos.find(p => p.id === item.productId);
                 return prod ? sum + (prod.price * item.quantity) : sum;
             }, 0);
-            document.getElementById('checkout-total').innerText = `$${total.toFixed(2)}`;
+
+            const shipping = getCheckoutShippingCost();
+            const total = subtotal + shipping;
+
+            const subtotalEl = document.getElementById('checkout-subtotal');
+            const shippingEl = document.getElementById('checkout-shipping');
+            const totalEl = document.getElementById('checkout-total');
+
+            if (subtotalEl) subtotalEl.innerText = `$${subtotal.toFixed(2)}`;
+            if (shippingEl) shippingEl.innerText = shipping ? `$${shipping.toFixed(2)}` : 'Selecciona un lugar';
+            if (totalEl) totalEl.innerText = `$${total.toFixed(2)}`;
+        }
+
+        function renderCheckoutView() {
+            updateCheckoutTotal();
+
+            const select = document.getElementById('checkout-address');
+            if (select && !select.dataset.shippingListenerAttached) {
+                select.addEventListener('change', updateCheckoutTotal);
+                select.dataset.shippingListenerAttached = 'true';
+            }
         }
 
         function renderFavoritesView() {
@@ -1304,7 +1342,7 @@ const form = e.target;
             const address = addressSelect ? addressSelect.value : 'No especificado';
             const paymentMethod = form.querySelector('input[name="payment"]:checked')?.parentElement?.innerText?.trim() || 'No especificado';
 
-            let total = 0;
+            let subtotal = 0;
             let orderSummary = `Número de pedido: ${orderNumber}\n\n*¡Hola MARGIE CANDLES! Quiero realizar un pedido:*\n\n`;
             orderSummary += `👤 *Cliente:* ${name}\n`;
             orderSummary += `📞 *Teléfono:* ${phone}\n`;
@@ -1317,7 +1355,7 @@ const form = e.target;
                 const p = productos.find(prod => prod.id === item.productId);
                 if (p) {
                     const itemTotal = p.price * item.quantity;
-                    total += itemTotal;
+                    subtotal += itemTotal;
                     orderSummary += `• ${item.quantity}x ${p.name}${item.size ? ` — Tamaño: ${item.size}` : ''}${item.aroma ? ` — Aroma: ${item.aroma}` : ''} ($${itemTotal.toFixed(2)})\n`;
                 }
             });
