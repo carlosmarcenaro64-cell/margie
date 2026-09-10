@@ -198,70 +198,146 @@
             
             <!-- Solicitud de Vela Personalizada -->
             <section class="py-20 bg-brand-light">
-                <div class="max-w-5xl mx-auto px-4">
+                <div class="max-w-6xl mx-auto px-4">
                     <div class="text-center mb-10">
-                        <span class="text-brand-gold uppercase tracking-[0.25em] text-xs font-bold">Hecha especialmente para ti</span>
-                        <h2 class="font-serif text-3xl md:text-4xl text-brand-brown mt-2 mb-4">Pide tu Vela Personalizada</h2>
-                        <div class="w-16 h-0.5 bg-brand-gold mx-auto mb-4"></div>
-                        <p class="text-gray-600 max-w-2xl mx-auto">Cuéntanos cómo imaginas tu vela y prepararemos una propuesta especial para tu ocasión.</p>
+                        <span class="text-brand-gold uppercase tracking-[0.25em] text-xs font-bold">Crea tu momento especial</span>
+                        <div class="flex items-center justify-center gap-5 mt-2">
+                            <div class="hidden sm:block w-20 h-px bg-brand-gold/50"></div>
+                            <h2 class="font-serif text-3xl md:text-5xl text-brand-brown">Vela Personalizada</h2>
+                            <div class="hidden sm:block w-20 h-px bg-brand-gold/50"></div>
+                        </div>
+                        <p class="text-gray-600 max-w-2xl mx-auto mt-4">Cuéntanos cómo imaginas tu vela y prepararemos una propuesta especial para tu ocasión.</p>
                     </div>
 
-                    <div class="bg-white rounded-xl shadow-sm border border-brand-beige p-6 md:p-10">
-                        <form id="custom-candle-form" onsubmit="handleCustomCandleRequest(event)">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm text-gray-600 mb-2">Propósito / Ocasión <span class="text-red-400">*</span></label>
-                                    <input id="custom-purpose" type="text" required placeholder="Ej: Cumpleaños, boda, regalo, evento..." class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:border-brand-gold">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-white rounded-2xl shadow-sm border border-brand-beige overflow-hidden">
+                        <!-- Formulario -->
+                        <div class="p-6 md:p-8 lg:p-10">
+                            <form id="custom-candle-form" onsubmit="handleCustomCandleRequest(event)">
+                                <div class="mb-6">
+                                    <label class="flex items-center gap-2 text-sm font-semibold text-brand-brown mb-2">
+                                        <i class="fas fa-gift text-brand-gold"></i>
+                                        Propósito / Ocasión <span class="text-red-400">*</span>
+                                    </label>
+                                    <input id="custom-purpose" type="text" required placeholder="Ej: Cumpleaños, boda, regalo, evento..." class="w-full p-3.5 border border-brand-beige rounded-lg bg-brand-light/40 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold">
                                 </div>
 
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm text-gray-600 mb-2">Imagen de referencia</label>
-                                    <input id="custom-image" type="file" accept="image/*" onchange="previewCustomImage(event)" class="w-full p-3 border border-gray-200 rounded-md bg-white text-sm text-gray-600 focus:outline-none focus:border-brand-gold">
-                                    <div id="custom-image-preview" class="hidden mt-3">
-                                        <img id="custom-image-preview-img" src="" alt="Vista previa" class="max-h-48 mx-auto rounded-lg object-contain border border-brand-beige">
+                                <div class="mb-6">
+                                    <label class="flex items-center gap-2 text-sm font-semibold text-brand-brown mb-2">
+                                        <i class="fas fa-image text-brand-gold"></i>
+                                        Imagen de referencia
+                                    </label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                                        <label for="custom-image" class="min-h-32 border-2 border-dashed border-brand-gold/40 rounded-xl bg-brand-light/50 flex flex-col items-center justify-center cursor-pointer hover:border-brand-gold hover:bg-brand-beige/30 transition-colors px-4 text-center">
+                                            <i class="fas fa-cloud-upload-alt text-3xl text-brand-gold mb-2"></i>
+                                            <span class="font-semibold text-brand-brown">Seleccionar archivo</span>
+                                            <span class="text-xs text-gray-400 mt-1">o arrastra tu imagen aquí</span>
+                                            <input id="custom-image" type="file" accept="image/*" class="hidden" onchange="previewCustomImage(event); updateCustomImageName(event)">
+                                        </label>
+                                        <div id="custom-image-preview" class="hidden text-center">
+                                            <img id="custom-image-preview-img" src="" alt="Vista previa" class="w-full max-h-40 object-cover rounded-xl border border-brand-beige shadow-sm">
+                                            <p class="text-xs text-gray-400 mt-2"><i class="far fa-eye mr-1"></i>Vista previa</p>
+                                        </div>
                                     </div>
-                                    <p class="text-xs text-gray-400 mt-2">Puedes adjuntar una imagen para mostrarnos tu idea.</p>
+                                    <p id="custom-image-name" class="text-xs text-gray-400 mt-2">Puedes adjuntar una imagen para mostrarnos tu idea.</p>
                                 </div>
 
-                                <div>
-                                    <label class="block text-sm text-gray-600 mb-2">Tamaño <span class="text-red-400">*</span></label>
-                                    <select id="custom-size" required class="w-full p-3 border border-gray-200 rounded-md bg-white text-gray-700 focus:outline-none focus:border-brand-gold">
-                                        <option value="" disabled selected>Selecciona un tamaño...</option>
-                                        <option value="Pequeño">Pequeño</option>
-                                        <option value="Mediano">Mediano</option>
-                                        <option value="Grande">Grande</option>
-                                    </select>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                    <div>
+                                        <label class="flex items-center gap-2 text-sm font-semibold text-brand-brown mb-2">
+                                            <i class="fas fa-candle-holder text-brand-gold"></i>
+                                            Tamaño <span class="text-red-400">*</span>
+                                        </label>
+                                        <select id="custom-size" required class="w-full p-3.5 border border-brand-beige rounded-lg bg-white text-gray-700 focus:outline-none focus:border-brand-gold">
+                                            <option value="" disabled selected>Selecciona un tamaño...</option>
+                                            <option value="Pequeño">Pequeño</option>
+                                            <option value="Mediano">Mediano</option>
+                                            <option value="Grande">Grande</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label class="flex items-center gap-2 text-sm font-semibold text-brand-brown mb-2">
+                                            <i class="fas fa-wind text-brand-gold"></i>
+                                            Aroma <span class="text-red-400">*</span>
+                                        </label>
+                                        <select id="custom-aroma" required class="w-full p-3.5 border border-brand-beige rounded-lg bg-white text-gray-700 focus:outline-none focus:border-brand-gold">
+                                            <option value="" disabled selected>Selecciona un aroma...</option>
+                                            <option value="Vanilla">Vanilla</option>
+                                            <option value="Coco">Coco</option>
+                                            <option value="Menta">Menta</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label class="flex items-center gap-2 text-sm font-semibold text-brand-brown mb-2">
+                                            <i class="fas fa-box text-brand-gold"></i>
+                                            Unidades requeridas <span class="text-red-400">*</span>
+                                        </label>
+                                        <div class="flex overflow-hidden border border-brand-beige rounded-lg">
+                                            <button type="button" onclick="changeCustomQty(-1)" class="w-12 bg-brand-light hover:bg-brand-beige text-brand-brown text-lg">−</button>
+                                            <input id="custom-quantity" type="number" min="1" step="1" value="1" required class="w-full p-3.5 text-center bg-white focus:outline-none font-semibold text-brand-brown">
+                                            <button type="button" onclick="changeCustomQty(1)" class="w-12 bg-brand-light hover:bg-brand-beige text-brand-brown text-lg">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="flex items-center gap-2 text-sm font-semibold text-brand-brown mb-2">
+                                            <i class="far fa-calendar-alt text-brand-gold"></i>
+                                            Fecha de entrega <span class="text-red-400">*</span>
+                                        </label>
+                                        <input id="custom-delivery-date" type="date" required class="w-full p-3.5 border border-brand-beige rounded-lg bg-white text-gray-700 focus:outline-none focus:border-brand-gold">
+                                        <p id="custom-date-help" class="text-xs text-gray-400 mt-2"></p>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <label class="block text-sm text-gray-600 mb-2">Aroma <span class="text-red-400">*</span></label>
-                                    <select id="custom-aroma" required class="w-full p-3 border border-gray-200 rounded-md bg-white text-gray-700 focus:outline-none focus:border-brand-gold">
-                                        <option value="" disabled selected>Selecciona un aroma...</option>
-                                        <option value="Vanilla">Vanilla</option>
-                                        <option value="Coco">Coco</option>
-                                        <option value="Menta">Menta</option>
-                                    </select>
+                                <div class="mt-8 pt-6 border-t border-brand-beige">
+                                    <button id="custom-submit-btn" type="submit" class="w-full bg-brand-gold hover:bg-brand-goldhover text-white px-8 py-4 rounded-lg uppercase tracking-wider text-sm font-bold transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-3">
+                                        <i class="fab fa-whatsapp text-xl"></i>
+                                        Solicitar Vela Personalizada
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                    <p class="text-xs text-gray-400 mt-3 text-center">En celulares compatibles, podrás compartir la imagen directamente desde la ventana de compartir hacia WhatsApp.</p>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Vista previa -->
+                        <div class="bg-brand-beige/40 p-6 md:p-8 lg:p-10 flex flex-col">
+                            <div class="bg-white/70 rounded-2xl border border-brand-beige p-5 flex-1">
+                                <div class="flex items-center gap-3 mb-5">
+                                    <div class="w-11 h-11 rounded-full bg-brand-dark text-white flex items-center justify-center">
+                                        <i class="fab fa-whatsapp text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-serif text-xl text-brand-brown">Así se verá en WhatsApp</h3>
+                                        <p class="text-xs text-gray-500">Tu solicitud se enviará con todos los detalles.</p>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <label class="block text-sm text-gray-600 mb-2">Unidades requeridas <span class="text-red-400">*</span></label>
-                                    <input id="custom-quantity" type="number" min="1" step="1" value="1" required class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:border-brand-gold">
+                                <div class="rounded-2xl bg-[#e9ded2] p-4 min-h-[380px] flex items-end">
+                                    <div class="bg-[#e2f7cb] rounded-xl rounded-bl-sm p-4 shadow-sm w-full max-w-md ml-auto text-[13px] text-brand-brown">
+                                        <p class="font-semibold mb-3">Hola MARGIE CANDLES, quiero solicitar una vela personalizada:</p>
+                                        <div class="space-y-1.5">
+                                            <p>🎁 <strong>Propósito / Ocasión:</strong> <span id="preview-purpose">—</span></p>
+                                            <p>🕯️ <strong>Tamaño:</strong> <span id="preview-size">—</span></p>
+                                            <p>🌸 <strong>Aroma:</strong> <span id="preview-aroma">—</span></p>
+                                            <p>📦 <strong>Unidades requeridas:</strong> <span id="preview-quantity">1</span></p>
+                                            <p>📅 <strong>Fecha de entrega:</strong> <span id="preview-date">—</span></p>
+                                            <p>🖼️ <strong>Imagen de referencia:</strong></p>
+                                        </div>
+                                        <div id="preview-whatsapp-image" class="hidden mt-3">
+                                            <img id="preview-whatsapp-image-img" src="" alt="Imagen de referencia" class="w-full max-h-52 object-cover rounded-lg">
+                                        </div>
+                                        <p class="text-[11px] text-gray-400 text-right mt-2">ahora ✓✓</p>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <label class="block text-sm text-gray-600 mb-2">Fecha de entrega <span class="text-red-400">*</span></label>
-                                    <input id="custom-delivery-date" type="date" required class="w-full p-3 border border-gray-200 rounded-md bg-white text-gray-700 focus:outline-none focus:border-brand-gold">
-                                    <p id="custom-date-help" class="text-xs text-gray-400 mt-2"></p>
-                                </div>
+                                <p class="text-xs text-gray-500 mt-4 flex items-center gap-2">
+                                    <i class="fab fa-whatsapp text-lg"></i>
+                                    Si seleccionas una imagen, el botón intentará compartirla directamente con WhatsApp en dispositivos compatibles.
+                                </p>
                             </div>
-
-                            <div class="mt-8 pt-6 border-t border-brand-beige text-center">
-                                <button type="submit" class="w-full md:w-auto bg-brand-gold hover:bg-brand-goldhover text-white px-10 py-3 rounded-sm uppercase tracking-wider text-sm font-bold transition-colors">
-                                    Solicitar Vela Personalizada
-                                </button>
-                                <p class="text-xs text-gray-400 mt-3">Al enviar, te llevaremos a WhatsApp para continuar con los detalles de tu pedido.</p>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1044,6 +1120,17 @@
             help.innerText = `La fecha más próxima disponible es ${day}/${month}/${year}.`;
         }
 
+        function setupCustomCandlePreview() {
+            ['custom-purpose', 'custom-size', 'custom-aroma', 'custom-quantity', 'custom-delivery-date'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', updateCustomPreview);
+                    el.addEventListener('change', updateCustomPreview);
+                }
+            });
+            updateCustomPreview();
+        }
+
         function previewCustomImage(event) {
             const file = event.target.files?.[0];
             const preview = document.getElementById('custom-image-preview');
@@ -1058,6 +1145,46 @@
             preview.classList.remove('hidden');
         }
 
+
+        function changeCustomQty(delta) {
+            const input = document.getElementById('custom-quantity');
+            if (!input) return;
+            const current = parseInt(input.value || '1', 10);
+            input.value = Math.max(1, current + delta);
+            updateCustomPreview();
+        }
+
+        function updateCustomImageName(event) {
+            const file = event.target.files?.[0];
+            const name = document.getElementById('custom-image-name');
+            if (name) name.innerText = file ? file.name : 'Puedes adjuntar una imagen para mostrarnos tu idea.';
+        }
+
+        function updateCustomPreview() {
+            const purpose = document.getElementById('custom-purpose')?.value.trim() || '—';
+            const size = document.getElementById('custom-size')?.value || '—';
+            const aroma = document.getElementById('custom-aroma')?.value || '—';
+            const quantity = document.getElementById('custom-quantity')?.value || '1';
+            const deliveryDate = document.getElementById('custom-delivery-date')?.value || '';
+
+            const setText = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = value;
+            };
+
+            setText('preview-purpose', purpose);
+            setText('preview-size', size);
+            setText('preview-aroma', aroma);
+            setText('preview-quantity', quantity);
+
+            if (deliveryDate) {
+                const [year, month, day] = deliveryDate.split('-');
+                setText('preview-date', `${day}/${month}/${year}`);
+            } else {
+                setText('preview-date', '—');
+            }
+        }
+
         function handleCustomCandleRequest(e) {
             e.preventDefault();
 
@@ -1067,6 +1194,7 @@
             const quantity = document.getElementById('custom-quantity').value;
             const deliveryDate = document.getElementById('custom-delivery-date').value;
             const imageInput = document.getElementById('custom-image');
+            const imageFile = imageInput?.files?.[0] || null;
             const minDate = getMinCustomDeliveryDate();
 
             if (deliveryDate < minDate) {
@@ -1075,33 +1203,55 @@
                 return;
             }
 
-            const imageName = imageInput?.files?.[0]?.name || 'No se adjuntó imagen';
             const [year, month, day] = deliveryDate.split('-');
             const formattedDate = `${day}/${month}/${year}`;
 
-            let message = `Hola MARGIE CANDLES, quiero solicitar una vela personalizada:
+            let message = `Hola MARGIE CANDLES, quiero solicitar una vela personalizada:\n\n`;
+            message += `🎁 *Propósito / Ocasión:* ${purpose}\n`;
+            message += `🕯️ *Tamaño:* ${size}\n`;
+            message += `🌸 *Aroma:* ${aroma}\n`;
+            message += `📦 *Unidades requeridas:* ${quantity}\n`;
+            message += `📅 *Fecha de entrega:* ${formattedDate}\n`;
+            message += `🖼️ *Imagen de referencia:* ${imageFile ? imageFile.name : 'No se adjuntó imagen'}\n`;
 
-`;
-            message += `🕯️ *Propósito / Ocasión:* ${purpose}
-`;
-            message += `📐 *Tamaño:* ${size}
-`;
-            message += `🌸 *Aroma:* ${aroma}
-`;
-            message += `🔢 *Unidades requeridas:* ${quantity}
-`;
-            message += `📅 *Fecha de entrega:* ${formattedDate}
-`;
-            message += `🖼️ *Imagen de referencia:* ${imageName}
+            const btn = document.getElementById('custom-submit-btn');
+            const originalHTML = btn ? btn.innerHTML : '';
 
-`;
-            message += `La imagen de referencia se enviará por este mismo chat de WhatsApp.`;
+            // En móviles compatibles, Web Share API permite compartir el archivo real
+            // y el texto en la misma hoja de compartir (el usuario elige WhatsApp).
+            if (imageFile && navigator.share && navigator.canShare) {
+                const shareData = { text: message, files: [imageFile] };
 
+                if (navigator.canShare({ files: [imageFile] })) {
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="fas fa-share-alt mr-2"></i> Abriendo compartir...';
+                    }
+
+                    navigator.share(shareData)
+                        .then(() => showToast('Solicitud compartida correctamente.'))
+                        .catch((error) => {
+                            if (error?.name !== 'AbortError') {
+                                const whatsappUrl = `https://wa.me/50374750007?text=${encodeURIComponent(message)}`;
+                                window.open(whatsappUrl, '_blank');
+                            }
+                        })
+                        .finally(() => {
+                            if (btn) {
+                                btn.disabled = false;
+                                btn.innerHTML = originalHTML;
+                            }
+                        });
+                    return;
+                }
+            }
+
+            // Fallback: WhatsApp con el texto si el navegador no permite compartir archivos.
             const whatsappUrl = `https://wa.me/50374750007?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
 
-            if (imageInput?.files?.length) {
-                showToast('Adjunta la imagen de referencia manualmente en WhatsApp.');
+            if (imageFile) {
+                showToast('Este navegador no permite adjuntar archivos automáticamente. WhatsApp se abrió con el pedido; adjunta la imagen desde el chat.');
             }
         }
 
@@ -1237,7 +1387,7 @@ const form = e.target;
         // --- 7. INICIALIZACIÓN (Boot Async) ---
         document.addEventListener('DOMContentLoaded', () => {
             // Iniciar extracción de datos
-            setupCustomDeliveryDate();
+            setupCustomDeliveryDate();            setupCustomCandlePreview();
         cargarProductosDesdeGoogle().then(() => {
                 // Cuando termine, armamos el sitio
                 setupFilters();
