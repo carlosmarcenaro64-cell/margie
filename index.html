@@ -163,7 +163,23 @@
 
         <!-- ================= VISTA: INICIO ================= -->
         
-            <!-- Banner de redes sociales -->
+           
+            <!-- Hero Section -->
+            <div class="relative h-[80vh] flex items-center justify-center bg-brand-dark overflow-hidden">
+                <img src="banner.png" alt="" class="absolute inset-0 w-full h-full object-cover opacity-60">
+                <div class="relative z-10 text-center px-4 max-w-3xl mx-auto animate-slide-up">
+                    <p class="text-brand-gold uppercase tracking-[0.3em] mb-4 text-sm font-semibold">Artesanía & Luz</p>
+                    <h1 class="font-serif text-5xl md:text-7xl text-white mb-6 leading-tight">Ilumina tus <br>momentos.</h1>
+                    <p class="text-gray-200 text-lg md:text-xl mb-10 font-light max-w-xl mx-auto">Velas de soja vertidas a mano, diseñadas para transformar tus espacios en santuarios de paz y elegancia.</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button onclick="navigate('shop')" class="bg-brand-gold hover:bg-brand-goldhover text-white px-8 py-3 rounded-sm uppercase tracking-wider text-sm font-bold transition-colors">Comprar Ahora</button>
+                        <button onclick="navigate('shop', { sort: 'new' })" class="bg-transparent border border-white text-white hover:bg-white hover:text-brand-dark px-8 py-3 rounded-sm uppercase tracking-wider text-sm font-bold transition-colors">Ver Colección</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categorías Destacadas -->
+         <!-- Banner de redes sociales -->
             <section class="py-8 bg-brand-dark">
                 <div class="max-w-6xl mx-auto px-4">
                     <div class="rounded-2xl bg-brand-brown/80 border border-brand-gold/30 px-5 py-6 md:px-8">
@@ -193,22 +209,6 @@
                 </div>
             </section>
 <section id="view-home" class="view-section active animate-fade-in">
-            <!-- Hero Section -->
-            <div class="relative h-[80vh] flex items-center justify-center bg-brand-dark overflow-hidden">
-                <img src="banner.png" alt="" class="absolute inset-0 w-full h-full object-cover opacity-60">
-                <div class="relative z-10 text-center px-4 max-w-3xl mx-auto animate-slide-up">
-                    <p class="text-brand-gold uppercase tracking-[0.3em] mb-4 text-sm font-semibold">Artesanía & Luz</p>
-                    <h1 class="font-serif text-5xl md:text-7xl text-white mb-6 leading-tight">Ilumina tus <br>momentos.</h1>
-                    <p class="text-gray-200 text-lg md:text-xl mb-10 font-light max-w-xl mx-auto">Velas de soja vertidas a mano, diseñadas para transformar tus espacios en santuarios de paz y elegancia.</p>
-                    <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <button onclick="navigate('shop')" class="bg-brand-gold hover:bg-brand-goldhover text-white px-8 py-3 rounded-sm uppercase tracking-wider text-sm font-bold transition-colors">Comprar Ahora</button>
-                        <button onclick="navigate('shop', { sort: 'new' })" class="bg-transparent border border-white text-white hover:bg-white hover:text-brand-dark px-8 py-3 rounded-sm uppercase tracking-wider text-sm font-bold transition-colors">Ver Colección</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Categorías Destacadas -->
-        
 
             <!-- Más Vendidos -->
             <div class="bg-brand-beige py-20">
