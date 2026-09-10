@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MARGIE CANDLES | Velas Artesanales Premium</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <meta name="description" content="Descubre nuestra colección exclusiva de velas artesanales. Aromas únicos, diseño elegante y relajación absoluta para tus espacios.">
     
     <!-- Open Graph Básico -->
@@ -21,6 +22,9 @@
     
     <!-- FontAwesome (Iconos) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- PapaParse para lectura de CSV de Google Sheets -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <!-- Configuración Tailwind -->
     <script>
@@ -46,7 +50,7 @@
         }
     </script>
 
-    <!-- Estilos Personalizados (Simulando CSS externo) -->
+    <!-- Estilos Personalizados -->
     <style>
         body { background-color: #FDFBF7; color: #4A3B32; }
         
@@ -89,9 +93,10 @@
 
     <!-- Pantalla de carga inicial -->
     <div id="loader">
-        <div class="text-center">
+        <div class="text-center" id="loader-content">
             <div class="spinner mb-4 mx-auto"></div>
             <h1 class="font-serif text-2xl text-brand-brown tracking-widest">MARGIE</h1>
+            <p class="text-xs text-brand-gold mt-2">Cargando catálogo...</p>
         </div>
     </div>
 
@@ -108,8 +113,9 @@
 
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center justify-center md:justify-start flex-1 md:flex-none">
-                    <a href="#" onclick="navigate('home')" class="font-serif text-3xl font-bold text-brand-brown tracking-widest hover:text-brand-gold transition-colors">
-                        MARGIE<span class="text-brand-gold text-4xl leading-none">.</span>
+                    <a href="#" onclick="navigate('home')" class="flex items-center">
+                        <img src="logo.png" class="h-14 md:h-16 w-auto object-contain hover:opacity-80 transition-opacity" alt="Logo">
+                         <h2 class="font-serif text-2xl md:text-3xl font-bold tracking-[0.2em] text-brand-brown hover:opacity-80 transition-opacity">MARGIE<span class="text-brand-gold">.</span></h2>
                     </a>
                 </div>
 
@@ -121,10 +127,6 @@
                     <a href="#footer" class="text-brand-brown hover:text-brand-gold transition-colors text-sm uppercase tracking-wider font-semibold">Contacto</a>
                 </nav>
 
-                <!-- Icons (Search, User, Heart, Cart) -->
-                <div class="flex items-center space-x-4 md:space-x-6">
-                    <button onclick="navigate('shop')" class="text-brand-brown hover:text-brand-gold transition-colors" title="Buscar">
-                        <i class="fas fa-search text-lg"></i>
                 <!-- Icons (Search, Heart, Cart) -->
                 <div class="flex items-center space-x-4 md:space-x-6">
                     <button onclick="navigate('shop')" class="text-brand-brown hover:text-brand-gold transition-colors" title="Buscar">
@@ -156,14 +158,14 @@
     <!-- Espaciador para nav fija -->
     <div class="h-20"></div>
 
-    <!-- MAIN CONTENT CONTAINER (SPA Views) -->
+    <!-- MAIN CONTENT CONTAINER -->
     <main class="flex-grow">
 
-        <!-- ================= VISTA: INICIO (HOME) ================= -->
+        <!-- ================= VISTA: INICIO ================= -->
         <section id="view-home" class="view-section active animate-fade-in">
             <!-- Hero Section -->
             <div class="relative h-[80vh] flex items-center justify-center bg-brand-dark overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1920&q=80" alt="" class="absolute inset-0 w-full h-full object-cover opacity-60">
+                <img src="banner.png" alt="" class="absolute inset-0 w-full h-full object-cover opacity-60">
                 <div class="relative z-10 text-center px-4 max-w-3xl mx-auto animate-slide-up">
                     <p class="text-brand-gold uppercase tracking-[0.3em] mb-4 text-sm font-semibold">Artesanía & Luz</p>
                     <h1 class="font-serif text-5xl md:text-7xl text-white mb-6 leading-tight">Ilumina tus <br>momentos.</h1>
@@ -176,41 +178,7 @@
             </div>
 
             <!-- Categorías Destacadas -->
-            <div class="max-w-7xl mx-auto px-4 py-20">
-                <div class="text-center mb-12">
-                    <h2 class="font-serif text-3xl md:text-4xl text-brand-brown mb-4">Descubre Nuestras Esencias</h2>
-                    <div class="w-16 h-0.5 bg-brand-gold mx-auto"></div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Cat 1 -->
-                    <div class="relative h-96 group cursor-pointer overflow-hidden rounded-md" onclick="navigate('shop', { category: 'Relajación' })">
-                        <img src="https://images.unsplash.com/photo-1596433809252-2591e3e7f2aa?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="">
-                        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors"></div>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center text-white">
-                            <h3 class="font-serif text-3xl mb-2">Relajación</h3>
-                            <span class="border-b border-transparent group-hover:border-white transition-colors pb-1 uppercase tracking-wider text-sm">Ver Productos</span>
-                        </div>
-                    </div>
-                    <!-- Cat 2 -->
-                    <div class="relative h-96 group cursor-pointer overflow-hidden rounded-md" onclick="navigate('shop', { category: 'Cítricos' })">
-                        <img src="https://images.unsplash.com/photo-1605651202774-7d573fd3f12d?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="[Image of Naranja]">
-                        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors"></div>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center text-white">
-                            <h3 class="font-serif text-3xl mb-2">Energía</h3>
-                            <span class="border-b border-transparent group-hover:border-white transition-colors pb-1 uppercase tracking-wider text-sm">Ver Productos</span>
-                        </div>
-                    </div>
-                    <!-- Cat 3 -->
-                    <div class="relative h-96 group cursor-pointer overflow-hidden rounded-md" onclick="navigate('shop', { category: 'Dulces' })">
-                        <img src="https://images.unsplash.com/photo-1610992015732-2449b76344bc?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="">
-                        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors"></div>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center text-white">
-                            <h3 class="font-serif text-3xl mb-2">Cálidos</h3>
-                            <span class="border-b border-transparent group-hover:border-white transition-colors pb-1 uppercase tracking-wider text-sm">Ver Productos</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        
 
             <!-- Más Vendidos -->
             <div class="bg-brand-beige py-20">
@@ -219,7 +187,6 @@
                         <h2 class="font-serif text-3xl md:text-4xl text-brand-brown mb-4">Favoritos de Margie</h2>
                         <div class="w-16 h-0.5 bg-brand-gold mx-auto"></div>
                     </div>
-                    <!-- Contenedor dinámico de productos destacados -->
                     <div id="featured-products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         <!-- Renderizado por JS -->
                     </div>
@@ -229,6 +196,76 @@
                 </div>
             </div>
             
+            <!-- Solicitud de Vela Personalizada -->
+            <section class="py-20 bg-brand-light">
+                <div class="max-w-5xl mx-auto px-4">
+                    <div class="text-center mb-10">
+                        <span class="text-brand-gold uppercase tracking-[0.25em] text-xs font-bold">Hecha especialmente para ti</span>
+                        <h2 class="font-serif text-3xl md:text-4xl text-brand-brown mt-2 mb-4">Pide tu Vela Personalizada</h2>
+                        <div class="w-16 h-0.5 bg-brand-gold mx-auto mb-4"></div>
+                        <p class="text-gray-600 max-w-2xl mx-auto">Cuéntanos cómo imaginas tu vela y prepararemos una propuesta especial para tu ocasión.</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-brand-beige p-6 md:p-10">
+                        <form id="custom-candle-form" onsubmit="handleCustomCandleRequest(event)">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm text-gray-600 mb-2">Propósito / Ocasión <span class="text-red-400">*</span></label>
+                                    <input id="custom-purpose" type="text" required placeholder="Ej: Cumpleaños, boda, regalo, evento..." class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:border-brand-gold">
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm text-gray-600 mb-2">Imagen de referencia</label>
+                                    <input id="custom-image" type="file" accept="image/*" onchange="previewCustomImage(event)" class="w-full p-3 border border-gray-200 rounded-md bg-white text-sm text-gray-600 focus:outline-none focus:border-brand-gold">
+                                    <div id="custom-image-preview" class="hidden mt-3">
+                                        <img id="custom-image-preview-img" src="" alt="Vista previa" class="max-h-48 mx-auto rounded-lg object-contain border border-brand-beige">
+                                    </div>
+                                    <p class="text-xs text-gray-400 mt-2">Puedes adjuntar una imagen para mostrarnos tu idea.</p>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm text-gray-600 mb-2">Tamaño <span class="text-red-400">*</span></label>
+                                    <select id="custom-size" required class="w-full p-3 border border-gray-200 rounded-md bg-white text-gray-700 focus:outline-none focus:border-brand-gold">
+                                        <option value="" disabled selected>Selecciona un tamaño...</option>
+                                        <option value="Pequeño">Pequeño</option>
+                                        <option value="Mediano">Mediano</option>
+                                        <option value="Grande">Grande</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm text-gray-600 mb-2">Aroma <span class="text-red-400">*</span></label>
+                                    <select id="custom-aroma" required class="w-full p-3 border border-gray-200 rounded-md bg-white text-gray-700 focus:outline-none focus:border-brand-gold">
+                                        <option value="" disabled selected>Selecciona un aroma...</option>
+                                        <option value="Vanilla">Vanilla</option>
+                                        <option value="Coco">Coco</option>
+                                        <option value="Menta">Menta</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm text-gray-600 mb-2">Unidades requeridas <span class="text-red-400">*</span></label>
+                                    <input id="custom-quantity" type="number" min="1" step="1" value="1" required class="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:border-brand-gold">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm text-gray-600 mb-2">Fecha de entrega <span class="text-red-400">*</span></label>
+                                    <input id="custom-delivery-date" type="date" required class="w-full p-3 border border-gray-200 rounded-md bg-white text-gray-700 focus:outline-none focus:border-brand-gold">
+                                    <p id="custom-date-help" class="text-xs text-gray-400 mt-2"></p>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 pt-6 border-t border-brand-beige text-center">
+                                <button type="submit" class="w-full md:w-auto bg-brand-gold hover:bg-brand-goldhover text-white px-10 py-3 rounded-sm uppercase tracking-wider text-sm font-bold transition-colors">
+                                    Solicitar Vela Personalizada
+                                </button>
+                                <p class="text-xs text-gray-400 mt-3">Al enviar, te llevaremos a WhatsApp para continuar con los detalles de tu pedido.</p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
             <!-- Promoción Banner -->
             <div class="py-20 max-w-7xl mx-auto px-4">
                 <div class="bg-brand-brown rounded-xl overflow-hidden flex flex-col md:flex-row items-center">
@@ -239,13 +276,13 @@
                         <button onclick="navigate('shop', { filter: 'ofertas' })" class="bg-brand-gold hover:bg-brand-goldhover text-white px-8 py-3 rounded-sm uppercase tracking-wider text-sm font-bold transition-colors">Aprovechar Oferta</button>
                     </div>
                     <div class="w-full md:w-1/2 h-64 md:h-[400px]">
-                        <img src="https://images.unsplash.com/photo-1542848529-6537604f86d6?auto=format&fit=crop&w=800&q=80" alt="" class="w-full h-full object-cover">
+                         <img src="promocion.png" alt="" class="w-full h-full object-cover">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ================= VISTA: TIENDA (CATÁLOGO) ================= -->
+        <!-- ================= VISTA: TIENDA ================= -->
         <section id="view-shop" class="view-section py-10 max-w-7xl mx-auto px-4 min-h-screen">
             <div class="text-center mb-10">
                 <h1 class="font-serif text-4xl text-brand-brown mb-2">Nuestra Colección</h1>
@@ -389,7 +426,6 @@
 
                     <button type="submit" class="w-full bg-brand-gold hover:bg-brand-goldhover text-white px-4 py-4 rounded-sm uppercase tracking-wider font-bold transition-colors">Confirmar Pedido</button>
                     
-                    <p class="text-xs text-center text-gray-400 mt-4">*Este es un entorno de simulación (SPA estática). Ningún dato de pago real es procesado.</p>
                 </form>
             </div>
         </section>
@@ -400,8 +436,8 @@
                 <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <i class="fas fa-check text-4xl text-green-500"></i>
                 </div>
-                <h1 class="font-serif text-3xl text-brand-brown mb-2">¡Pedido realizado con éxito!</h1>
-                <p class="text-gray-600 mb-6">Gracias por tu compra. Hemos simulado la creación de tu pedido.</p>
+                <h1 class="font-serif text-3xl text-brand-brown mb-2">¡Pedido procesado!</h1>
+                <p class="text-gray-600 mb-6">Serás redirigido a WhatsApp para finalizar la comunicación con nosotros.</p>
                 <div class="bg-brand-light p-4 rounded mb-8 inline-block">
                     <span class="text-sm text-gray-500 block mb-1">Número de pedido:</span>
                     <strong class="text-xl text-brand-brown tracking-widest" id="order-number"></strong>
@@ -433,11 +469,11 @@
     <footer id="footer" class="bg-brand-dark text-white pt-16 pb-8 border-t-4 border-brand-gold">
         <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
             <div>
-                <h2 class="font-serif text-3xl font-bold tracking-widest mb-4">MARGIE<span class="text-brand-gold">.</span></h2>
+                <img src="logo.png" alt="MARGIE CANDLES" class="h-16 w-auto object-contain mb-4 bg-white/10 rounded p-1">
                 <p class="text-gray-400 text-sm mb-6">Artesanía, luz y aromas que transforman tus espacios. Hechas a mano con cera de soja 100% natural.</p>
                 <div class="flex space-x-4">
-                    <a href="#" class="text-gray-400 hover:text-brand-gold transition-colors"><i class="fab fa-instagram text-xl"></i> instagram.com/velas_margie?stkn=MXZiMjhoMWRiZjZqMQ== </a>
-                    <a href="#" class="text-gray-400 hover:text-brand-gold transition-colors"><i class="fab fa-facebook text-xl"></i></a>
+                    <a href="https://instagram.com/velas_margie?stkn=MXZiMjhoMWRiZjZqMQ==" target="_blank" rel="noopener noreferrer" aria-label="Instagram de MARGIE CANDLES" class="text-gray-400 hover:text-brand-gold transition-colors"><i class="fab fa-instagram text-xl"></i></a>
+                    <a href="https://www.tiktok.com/@margaritapalacios558?lang=es" target="_blank" rel="noopener noreferrer" aria-label="Instagram de MARGIE CANDLES" class="text-gray-400 hover:text-brand-gold transition-colors"><i class="fab fa-tiktok text-xl"></i></a>
                     <a href="#" class="text-gray-400 hover:text-brand-gold transition-colors"><i class="fab fa-pinterest text-xl"></i></a>
                 </div>
             </div>
@@ -447,7 +483,6 @@
                     <li><a href="#" onclick="navigate('home')" class="hover:text-white transition-colors">Inicio</a></li>
                     <li><a href="#" onclick="navigate('shop')" class="hover:text-white transition-colors">Tienda</a></li>
                     <li><a href="#" onclick="navigate('favorites')" class="hover:text-white transition-colors">Favoritos</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Sobre Nosotros</a></li>
                 </ul>
             </div>
             <div>
@@ -455,28 +490,25 @@
                 <ul class="space-y-2 text-sm text-gray-400">
                     <li><a href="#" class="hover:text-white transition-colors">Preguntas Frecuentes</a></li>
                     <li><a href="#" class="hover:text-white transition-colors">Política de Envíos</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Devoluciones</a></li>
                     <li><a href="#" class="hover:text-white transition-colors">Cuidados de tu vela</a></li>
                 </ul>
             </div>
             <div>
                 <h3 class="font-serif text-xl mb-4 text-brand-gold">Contacto</h3>
                 <ul class="space-y-3 text-sm text-gray-400">
-                    <li><i class="fas fa-envelope mr-2 text-brand-gold"></i> hola@margiecandles.demo</li>
-                    <li><i class="fas fa-phone mr-2 text-brand-gold"></i> +503 7719-0952</li>
-                    <li><i class="fab fa-whatsapp mr-2 text-brand-gold"></i> +503 7719-0952</li>
-                    <li class="mt-4"><span class="block text-brand-gold mb-1">Horarios:</span> Lunes a Viernes: 9am - 5pm</li>
+                    <li><i class="fas fa-envelope mr-2 text-brand-gold"></i> margienegocio@gmail.com </li>
+                    <li><i class="fab fa-whatsapp mr-2 text-brand-gold"></i> +503 74750007</li>
+                    <li class="mt-4"><span class="block text-brand-gold mb-1">Horarios:</span> Lunes a Viernes: 8am - 5pm</li>
                 </ul>
             </div>
         </div>
         <div class="max-w-7xl mx-auto px-4 pt-8 border-t border-gray-800 text-center text-sm text-gray-500">
             <p>&copy; 2026 MARGIE CANDLES. Todos los derechos reservados.</p>
-            <p class="mt-1 text-xs">Proyecto de demostración (SPA estática) para GitHub Pages.</p>
         </div>
     </footer>
 
     <!-- Botón WhatsApp Flotante -->
-    <a href="https://wa.me/50377190952?text=Hola%20MARGIE,%20necesito%20informaci%C3%B3n" id="whatsapp-btn" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-lg hover:bg-green-600 transition-colors z-40 hover:scale-110 transform duration-200">
+    <a href="https://wa.me/50374750007?text=Hola%20MARGIE,%20necesito%20informaci%C3%B3n" id="whatsapp-btn" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-lg hover:bg-green-600 transition-colors z-40 hover:scale-110 transform duration-200">
         <i class="fab fa-whatsapp"></i>
     </a>
 
@@ -484,38 +516,63 @@
     <div id="toast-container"></div>
 
     <!-- ========================================== -->
-    <!-- LOGICA JAVASCRIPT (SPA, Estado, Productos) -->
+    <!-- LOGICA JAVASCRIPT -->
     <!-- ========================================== -->
     <script>
-        /**
-         * Jarvis Note: 
-         * Señor Carlos, aquí comienza el corazón lógico del sistema.
-         * En un proyecto tradicional Node.js, esto se dividiría en múltiples archivos en /js/.
-         * Por restricciones estructurales y eficiencia, se ha integrado impecablemente aquí.
-         */
+        // --- 1. BASE DE DATOS DE PRODUCTOS (Dinámica) ---
+        let productos = [];
 
-        // --- 1. BASE DE DATOS DE PRODUCTOS (Simulada) ---
-        const productos = [
-            { id: 1, name: "Vela de Vainilla Francesa", price: 25.00, oldPrice: null, category: "Dulces", aroma: "Vainilla, Caramelo, Mantequilla", size: "250g", stock: 15, rating: 5, isNew: false, image: "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=500&q=80", desc: "Clásica y reconfortante. Llena tu espacio con el aroma dulce y cálido de la vainilla auténtica." },
-            { id: 2, name: "Lavanda & Manzanilla", price: 22.00, oldPrice: 28.00, category: "Relajación", aroma: "Lavanda, Manzanilla, Sándalo", size: "250g", stock: 20, rating: 4.8, isNew: false, image: "https://images.unsplash.com/photo-1596433809252-2591e3e7f2aa?auto=format&fit=crop&w=500&q=80", desc: "Diseñada para apaciguar la mente. Ideal para encender antes de dormir o durante un baño relajante." },
-            { id: 3, name: "Cítricos de Sicilia", price: 24.00, oldPrice: null, category: "Cítricos", aroma: "Naranja dulce, Pomelo, Limón", size: "200g", stock: 10, rating: 4.5, isNew: true, image: "https://images.unsplash.com/photo-1605651202774-7d573fd3f12d?auto=format&fit=crop&w=500&q=80", desc: "Energía pura embotellada. Un estallido cítrico que revitaliza cualquier habitación." },
-            { id: 4, name: "Café Tostado & Avellana", price: 26.00, oldPrice: null, category: "Dulces", aroma: "Café expreso, Avellana tostada", size: "300g", stock: 5, rating: 4.9, isNew: false, image: "https://images.unsplash.com/photo-1610992015732-2449b76344bc?auto=format&fit=crop&w=500&q=80", desc: "Para los amantes de las mañanas. El aroma robusto del café recién hecho." },
-            { id: 5, name: "Frutos Rojos del Bosque", price: 23.00, oldPrice: 30.00, category: "Frutales", aroma: "Fresa, Mora, Frambuesa", size: "250g", stock: 12, rating: 4.2, isNew: false, image: "https://images.unsplash.com/photo-1606314781498-89c09d3b0366?auto=format&fit=crop&w=500&q=80", desc: "Intensa, dulce y vibrante. Perfecta para ambientar tardes de lectura." },
-            { id: 6, name: "Jardín de Rosas", price: 30.00, oldPrice: null, category: "Florales", aroma: "Rosa Damascena, Peonía", size: "250g", stock: 8, rating: 4.7, isNew: true, image: "https://images.unsplash.com/photo-1530932029707-857e3f60f607?auto=format&fit=crop&w=500&q=80", desc: "Romántica y sofisticada. La esencia pura de un jardín en primavera." },
-            { id: 7, name: "Noche de Jazmín", price: 28.00, oldPrice: null, category: "Florales", aroma: "Jazmín, Ylang Ylang", size: "200g", stock: 15, rating: 4.6, isNew: false, image: "https://images.unsplash.com/photo-1544976722-40995ba1a8d0?auto=format&fit=crop&w=500&q=80", desc: "Misteriosa y cautivadora, perfecta para cenas elegantes o meditación." },
-            { id: 8, name: "Ámbar y Sándalo", price: 35.00, oldPrice: 45.00, category: "Amaderados", aroma: "Sándalo hindú, Ámbar gris", size: "350g", stock: 7, rating: 5, isNew: false, image: "https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=500&q=80", desc: "Nuestra vela más premium. Notas profundas, terrosas y sumamente elegantes." },
-            { id: 9, name: "Canela y Manzana", price: 22.00, oldPrice: null, category: "Especias", aroma: "Canela, Manzana horneada", size: "250g", stock: 25, rating: 4.4, isNew: false, image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?auto=format&fit=crop&w=500&q=80", desc: "El aroma tradicional del hogar. Cálida y nostálgica." },
-            { id: 10, name: "Coco Tropical", price: 24.00, oldPrice: null, category: "Frutales", aroma: "Coco cremoso, Vainilla", size: "250g", stock: 14, rating: 4.5, isNew: true, image: "https://images.unsplash.com/photo-1623512270960-e41bf5289f64?auto=format&fit=crop&w=500&q=80", desc: "Un escape instantáneo a la playa. Dulce y relajante." },
-            { id: 11, name: "Chocolate Intenso", price: 25.00, oldPrice: 32.00, category: "Dulces", aroma: "Cacao puro, Crema", size: "250g", stock: 9, rating: 4.8, isNew: false, image: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=500&q=80", desc: "Un capricho olfativo sin calorías. Irresistible." },
-            { id: 12, name: "Magia de Navidad", price: 32.00, oldPrice: 40.00, category: "Especias", aroma: "Pino, Clavo, Naranja", size: "300g", stock: 30, rating: 5, isNew: false, image: "https://images.unsplash.com/photo-1543363136-3fdb62e11be5?auto=format&fit=crop&w=500&q=80", desc: "Edición especial de temporada. El espíritu festivo en un frasco." },
-            { id: 13, name: "Té Verde Zen", price: 24.00, oldPrice: null, category: "Relajación", aroma: "Té verde matcha, Bambú", size: "200g", stock: 18, rating: 4.3, isNew: false, image: "https://images.unsplash.com/photo-1620917670397-a4a5402a3c6c?auto=format&fit=crop&w=500&q=80", desc: "Aroma limpio, fresco y purificador." },
-            { id: 14, name: "Madera de Cedro", price: 29.00, oldPrice: null, category: "Amaderados", aroma: "Cedro silvestre, Vetiver", size: "250g", stock: 11, rating: 4.6, isNew: false, image: "https://images.unsplash.com/photo-1608518608316-c774659baf20?auto=format&fit=crop&w=500&q=80", desc: "Un paseo por el bosque lluvioso. Masculina y sofisticada." },
-            { id: 15, name: "Margie Personalizada", price: 45.00, oldPrice: null, category: "Premium", aroma: "A elección", size: "400g", stock: 99, rating: 5, isNew: true, image: "https://images.unsplash.com/photo-1599427382103-3bb8ccecdb3b?auto=format&fit=crop&w=500&q=80", desc: "Creamos tu vela soñada. Elige el envase, el aroma y la etiqueta personalizada." }
-        ];
+        // Función: Extraer datos de Google Sheets
+        function cargarProductosDesdeGoogle() {
+            // URL configurada automáticamente para salida CSV
+            const urlCSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQVW8X2fb7pycWf6wvuHvfXDEs8pMa-dhpxOKVgYuRh0s9Ibpn_TQISbyGP_XEOQNQzAr1hh7SVOoQJ/pub?gid=0&single=true&output=csv';
 
-        // --- 2. GESTIÓN DEL ESTADO (Simulando un framework reactivo y Backend local) ---
+            return new Promise((resolve, reject) => {
+                Papa.parse(urlCSV, {
+                    download: true,
+                    header: true,
+                    dynamicTyping: true, 
+                    complete: function(results) {
+                        // Mapeo defensivo adaptado a las columnas en español
+                        productos = results.data.map((item, index) => ({
+                            id: parseInt(item.id) || (index + 1),
+                            name: item.nombre,
+                            price: parseFloat(item.precio),
+                            oldPrice: item['precio original'] ? parseFloat(item['precio original']) : null,
+                            category: item.categoria,
+                            aroma: item['aroma principal'],
+                            aromas: String(item['aroma principal'] || '')
+                                .split(',')
+                                .map(a => a.trim())
+                                .filter(Boolean),
+                            size: item.tamaño,
+                            sizes: String(item.tamaño || '')
+                                .split(',')
+                                .map(s => s.trim())
+                                .filter(Boolean),
+                            stock: parseInt(item.stock),
+                            rating: 5,
+                            isNew: false,
+                            image: item['imagen (link)'],
+                            desc: item.descripcion
+                        })).filter(p => !isNaN(p.price));
+                        resolve();
+                    },
+                    error: function(error) {
+                        console.error("Fallo de red al extraer productos:", error);
+                        reject(error);
+                    }
+                });
+            });
+        }
+
+        // --- 2. GESTIÓN DEL ESTADO ---
         let state = {
-            cart: JSON.parse(localStorage.getItem('margie_cart')) || [],
+            cart: (JSON.parse(localStorage.getItem('margie_cart')) || []).map(item => ({
+                ...item,
+                aroma: item.aroma || '',
+                size: item.size || ''
+            })),
             favorites: JSON.parse(localStorage.getItem('margie_favorites')) || [],
             currentView: 'home',
             currentProduct: null,
@@ -530,12 +587,9 @@
 
         // --- 3. ENRUTADOR SPA (Single Page Application Routing) ---
         function navigate(viewId, params = null) {
-            // Ocultar todas las vistas
             document.querySelectorAll('.view-section').forEach(el => {
                 el.classList.remove('active', 'flex-active', 'animate-fade-in');
             });
-            
-            // Scrollear al inicio
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             const targetView = document.getElementById(`view-${viewId}`);
@@ -544,7 +598,6 @@
                 state.currentView = viewId;
             }
 
-            // Lógica específica por vista
             if (viewId === 'shop') {
                 if (params && params.category) { state.shopFilters.category = params.category; document.querySelector(`input[name="cat"][value="${params.category}"]`)?.click(); }
                 if (params && params.sort) { state.shopFilters.sort = params.sort; document.getElementById('sort-select').value = params.sort; }
@@ -567,22 +620,43 @@
 
         // --- 4. RENDERIZADO DE COMPONENTES DE UI ---
         
+        function getProductSizes(product) {
+            if (Array.isArray(product.sizes) && product.sizes.length) return product.sizes;
+            return String(product.size || '')
+                .split(',')
+                .map(s => s.trim())
+                .filter(Boolean);
+        }
+
+        function getProductAromas(product) {
+            if (Array.isArray(product.aromas) && product.aromas.length) return product.aromas;
+            return String(product.aroma || '')
+                .split(',')
+                .map(a => a.trim())
+                .filter(Boolean);
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
         function updateUI() {
-            // Badge Carrito
             const cartTotalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0);
             document.getElementById('cart-count').innerText = cartTotalItems;
             
-            // Badge Favoritos
             const favBadge = document.getElementById('fav-count');
             favBadge.innerText = state.favorites.length;
             if(state.favorites.length > 0) { favBadge.classList.remove('hidden'); } else { favBadge.classList.add('hidden'); }
-
-            // WhatsApp dinámico
             updateWhatsAppLink();
         }
 
         function createProductCardHTML(product) {
-            const hasOffer = product.oldPrice !== null;
+            const hasOffer = product.oldPrice !== null && !isNaN(product.oldPrice);
             const discount = hasOffer ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : 0;
             const isFav = state.favorites.includes(product.id);
 
@@ -606,7 +680,17 @@
                             ${hasOffer ? `<span class="text-gray-400 line-through">$${product.oldPrice.toFixed(2)}</span>` : ''}
                             <span class="font-bold text-brand-brown text-lg">$${product.price.toFixed(2)}</span>
                         </div>
-                        <button onclick="addToCart(${product.id})" class="w-full bg-brand-light border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-white py-2 rounded transition-colors text-sm font-bold uppercase tracking-wider">
+                        ${getProductSizes(product).length > 1 ? `
+                            <select id="size-card-${product.id}" class="w-full mb-2 p-2 border border-gray-200 rounded text-sm text-gray-700 focus:outline-none focus:border-brand-gold">
+                                ${getProductSizes(product).map(size => `<option value="${escapeHtml(size)}">${escapeHtml(size)}</option>`).join('')}
+                            </select>
+                        ` : ''}
+                        ${getProductAromas(product).length > 1 ? `
+                            <select id="aroma-card-${product.id}" class="w-full mb-2 p-2 border border-gray-200 rounded text-sm text-gray-700 focus:outline-none focus:border-brand-gold">
+                                ${getProductAromas(product).map(aroma => `<option value="${escapeHtml(aroma)}">${escapeHtml(aroma)}</option>`).join('')}
+                            </select>
+                        ` : ''}
+                        <button onclick="addProductCardToCart(${product.id})" class="w-full bg-brand-light border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-white py-2 rounded transition-colors text-sm font-bold uppercase tracking-wider">
                             Añadir al Carrito
                         </button>
                     </div>
@@ -614,21 +698,17 @@
             `;
         }
 
-        // --- Render Home ---
         function renderHome() {
-            // Destacados (top 4 mejores rating o hardcodeados)
-            const featured = productos.sort((a, b) => b.rating - a.rating).slice(0, 4);
+            const featured = productos.length > 0 ? [...productos].sort((a, b) => b.rating - a.rating).slice(0, 4) : [];
             const container = document.getElementById('featured-products-container');
             container.innerHTML = featured.map(p => createProductCardHTML(p)).join('');
         }
 
-        // --- Render Shop ---
         function renderShop() {
             const container = document.getElementById('shop-products-container');
             const noProductsMsg = document.getElementById('no-products-msg');
             const offerBtn = document.getElementById('btn-show-offers');
 
-            // Actualizar UI de botón de ofertas
             if (state.shopFilters.offersOnly) {
                 offerBtn.classList.replace('bg-brand-light', 'bg-brand-gold');
                 offerBtn.classList.replace('text-brand-gold', 'text-white');
@@ -639,15 +719,13 @@
                 offerBtn.innerText = "Ver solo Ofertas";
             }
 
-            // Aplicar filtros
             let filtered = productos.filter(p => {
                 const matchCat = state.shopFilters.category === 'all' || p.category === state.shopFilters.category;
                 const matchQuery = p.name.toLowerCase().includes(state.shopFilters.query.toLowerCase()) || p.aroma.toLowerCase().includes(state.shopFilters.query.toLowerCase());
-                const matchOffer = state.shopFilters.offersOnly ? p.oldPrice !== null : true;
+                const matchOffer = state.shopFilters.offersOnly ? (p.oldPrice !== null && !isNaN(p.oldPrice)) : true;
                 return matchCat && matchQuery && matchOffer;
             });
 
-            // Aplicar ordenamiento
             if (state.shopFilters.sort === 'price-asc') filtered.sort((a, b) => a.price - b.price);
             if (state.shopFilters.sort === 'price-desc') filtered.sort((a, b) => b.price - a.price);
             if (state.shopFilters.sort === 'new') filtered.sort((a, b) => (a.isNew === b.isNew) ? 0 : a.isNew ? -1 : 1);
@@ -657,26 +735,22 @@
                 noProductsMsg.classList.remove('hidden');
             } else {
                 noProductsMsg.classList.add('hidden');
-                // Agregar clase de animación a las cards para efecto en cascada visual
                 container.innerHTML = filtered.map((p, i) => {
                     const cardHtml = createProductCardHTML(p);
-                    // Inyectar clase animate-slide-up al div padre generado
                     return cardHtml.replace('product-card', `product-card animate-slide-up bg-white`);
                 }).join('');
             }
         }
 
-        // --- Render Detail ---
         function renderProductDetail() {
             const p = state.currentProduct;
             if(!p) return navigate('shop');
 
             const container = document.getElementById('product-detail-container');
             const isFav = state.favorites.includes(p.id);
-            const hasOffer = p.oldPrice !== null;
+            const hasOffer = p.oldPrice !== null && !isNaN(p.oldPrice);
             const discount = hasOffer ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100) : 0;
 
-            // Renderizar estrellas
             let starsHtml = '';
             for(let i=1; i<=5; i++) {
                 if(i <= Math.floor(p.rating)) starsHtml += '<i class="fas fa-star text-brand-gold"></i>';
@@ -710,9 +784,27 @@
 
                         <p class="text-gray-600 mb-8 leading-relaxed">${p.desc}</p>
 
-                        <div class="grid grid-cols-2 gap-4 mb-8 bg-brand-light p-4 rounded border border-brand-beige">
-                            <div><span class="block text-xs text-gray-400 uppercase">Aroma principal</span><span class="text-brand-brown font-semibold text-sm">${p.aroma}</span></div>
-                            <div><span class="block text-xs text-gray-400 uppercase">Tamaño</span><span class="text-brand-brown font-semibold text-sm">${p.size}</span></div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 bg-brand-light p-4 rounded border border-brand-beige">
+                            <div>
+                                <span class="block text-xs text-gray-400 uppercase mb-1">Aroma</span>
+                                ${getProductAromas(p).length > 1 ? `
+                                    <select id="detail-aroma" class="w-full p-2 border border-gray-200 rounded bg-white text-brand-brown text-sm focus:outline-none focus:border-brand-gold">
+                                        ${getProductAromas(p).map(aroma => `<option value="${escapeHtml(aroma)}">${escapeHtml(aroma)}</option>`).join('')}
+                                    </select>
+                                ` : `
+                                    <span class="text-brand-brown font-semibold text-sm">${escapeHtml(getProductAromas(p)[0] || 'Sin especificar')}</span>
+                                `}
+                            </div>
+                            <div>
+                                <span class="block text-xs text-gray-400 uppercase mb-1">Tamaño</span>
+                                ${getProductSizes(p).length > 1 ? `
+                                    <select id="detail-size" class="w-full p-2 border border-gray-200 rounded bg-white text-brand-brown text-sm focus:outline-none focus:border-brand-gold">
+                                        ${getProductSizes(p).map(size => `<option value="${escapeHtml(size)}">${escapeHtml(size)}</option>`).join('')}
+                                    </select>
+                                ` : `
+                                    <span class="text-brand-brown font-semibold text-sm">${escapeHtml(getProductSizes(p)[0] || 'Sin especificar')}</span>
+                                `}
+                            </div>
                         </div>
 
                         <div class="flex flex-col sm:flex-row gap-4">
@@ -739,7 +831,6 @@
             }
         }
 
-        // --- Render Cart ---
         function renderCartView() {
             const container = document.getElementById('cart-items-container');
             const emptyMsg = document.getElementById('empty-cart-msg');
@@ -751,17 +842,17 @@
             } else {
                 emptyMsg.classList.add('hidden');
                 cartContent.classList.remove('hidden');
-                cartContent.classList.add('flex'); // Es lg:flex-row
+                cartContent.classList.add('flex');
 
                 let subtotal = 0;
                 let originalTotal = 0;
 
                 container.innerHTML = state.cart.map((item, index) => {
                     const prod = productos.find(p => p.id === item.productId);
-                    if(!prod) return '';
+                    if(!prod) return ''; // En caso de que se haya eliminado el producto de la base
                     
                     const itemTotal = prod.price * item.quantity;
-                    const itemOriginalTotal = (prod.oldPrice || prod.price) * item.quantity;
+                    const itemOriginalTotal = (prod.oldPrice && !isNaN(prod.oldPrice) ? prod.oldPrice : prod.price) * item.quantity;
                     subtotal += itemTotal;
                     originalTotal += itemOriginalTotal;
 
@@ -771,13 +862,14 @@
                             <img src="${prod.image}" alt="${prod.name}" class="w-24 h-24 object-cover rounded">
                             <div class="flex-1 text-center sm:text-left">
                                 <h4 class="font-serif text-lg text-brand-brown">${prod.name}</h4>
-                                <p class="text-xs text-brand-gold mb-2">${prod.size}</p>
+                                <p class="text-xs text-brand-gold mb-1">Tamaño: <strong>${escapeHtml(item.size || prod.size || '')}</strong></p>
+                                ${item.aroma ? `<p class="text-xs text-gray-500 mb-2">Aroma: <strong>${escapeHtml(item.aroma)}</strong></p>` : ''}
                                 <div class="font-bold text-brand-brown">$${prod.price.toFixed(2)}</div>
                             </div>
                             <div class="flex items-center border border-gray-300 rounded overflow-hidden">
-                                <button onclick="updateCartQty(${item.productId}, -1)" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100">-</button>
+                                <button onclick="updateCartQty(${item.productId}, ${JSON.stringify(item.aroma || '')}, ${JSON.stringify(item.size || '')}, -1)" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100">-</button>
                                 <span class="w-10 text-center font-bold text-sm">${item.quantity}</span>
-                                <button onclick="updateCartQty(${item.productId}, 1)" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100">+</button>
+                                <button onclick="updateCartQty(${item.productId}, ${JSON.stringify(item.aroma || '')}, ${JSON.stringify(item.size || '')}, 1)" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100">+</button>
                             </div>
                             <div class="w-24 text-right font-bold text-lg text-brand-brown hidden sm:block">
                                 $${itemTotal.toFixed(2)}
@@ -793,16 +885,14 @@
             }
         }
 
-        // --- Render Checkout ---
         function renderCheckoutView() {
             let total = state.cart.reduce((sum, item) => {
                 const prod = productos.find(p => p.id === item.productId);
-                return sum + (prod.price * item.quantity);
+                return prod ? sum + (prod.price * item.quantity) : sum;
             }, 0);
             document.getElementById('checkout-total').innerText = `$${total.toFixed(2)}`;
         }
 
-        // --- Render Favorites ---
         function renderFavoritesView() {
             const container = document.getElementById('fav-products-container');
             const emptyMsg = document.getElementById('empty-fav-msg');
@@ -817,33 +907,88 @@
             }
         }
 
-
-        // --- 5. LOGICA DE ACCIONES (Cart, Fav) ---
+        // --- 5. LOGICA DE ACCIONES ---
         
-        function addToCart(productId, qty = 1) {
-            const exist = state.cart.find(item => item.productId === productId);
-            if (exist) { exist.quantity += qty; } 
-            else { state.cart.push({ productId, quantity: qty }); }
+        function generateOrderNumber() {
+            const key = 'margie_last_order_number';
+            let number = parseInt(localStorage.getItem(key) || '0', 10) + 1;
+            localStorage.setItem(key, String(number));
+            return `MC-${String(number).padStart(4, '0')}`;
+        }
+
+        function addToCart(productId, qty = 1, aroma = '', size = '') {
+            const product = productos.find(p => p.id === productId);
+            if (!product) return;
+
+            const selectedAroma = aroma || getProductAromas(product)[0] || '';
+            const selectedSize = size || getProductSizes(product)[0] || '';
+
+            const exist = state.cart.find(item =>
+                item.productId === productId &&
+                (item.aroma || '') === selectedAroma &&
+                (item.size || '') === selectedSize
+            );
+
+            if (exist) {
+                exist.quantity += qty;
+            } else {
+                state.cart.push({
+                    productId,
+                    quantity: qty,
+                    aroma: selectedAroma,
+                    size: selectedSize
+                });
+            }
+
             saveState();
             showToast("Producto agregado al carrito 🛒");
         }
 
-        function addDetailToCart(productId) {
-            const qty = parseInt(document.getElementById('detail-qty').value);
-            addToCart(productId, qty);
+        function addProductCardToCart(productId) {
+            const product = productos.find(p => p.id === productId);
+            if (!product) return;
+
+            const aromaSelector = document.getElementById(`aroma-card-${productId}`);
+            const sizeSelector = document.getElementById(`size-card-${productId}`);
+
+            const aroma = aromaSelector ? aromaSelector.value : getProductAromas(product)[0] || '';
+            const size = sizeSelector ? sizeSelector.value : getProductSizes(product)[0] || '';
+
+            addToCart(productId, 1, aroma, size);
         }
 
-        function updateCartQty(productId, delta) {
-            const item = state.cart.find(i => i.productId === productId);
+        function addDetailToCart(productId) {
+            const qty = parseInt(document.getElementById('detail-qty').value);
+            const aromaSelector = document.getElementById('detail-aroma');
+            const sizeSelector = document.getElementById('detail-size');
+            const product = productos.find(p => p.id === productId);
+
+            const aroma = aromaSelector ? aromaSelector.value : (product ? getProductAromas(product)[0] || '' : '');
+            const size = sizeSelector ? sizeSelector.value : (product ? getProductSizes(product)[0] || '' : '');
+
+            addToCart(productId, qty, aroma, size);
+        }
+
+        function updateCartQty(productId, aroma, size, delta) {
+            const item = state.cart.find(i =>
+                i.productId === productId &&
+                (i.aroma || '') === (aroma || '') &&
+                (i.size || '') === (size || '')
+            );
+
             if (item) {
                 item.quantity += delta;
-                if (item.quantity <= 0) removeFromCart(productId);
+                if (item.quantity <= 0) removeFromCart(productId, aroma, size);
                 else { saveState(); renderCartView(); }
             }
         }
 
-        function removeFromCart(productId) {
-            state.cart = state.cart.filter(i => i.productId !== productId);
+        function removeFromCart(productId, aroma = '', size = '') {
+            state.cart = state.cart.filter(i =>
+                !(i.productId === productId &&
+                  (i.aroma || '') === (aroma || '') &&
+                  (i.size || '') === (size || ''))
+            );
             saveState();
             renderCartView();
             showToast("Producto eliminado");
@@ -858,7 +1003,7 @@
         }
 
         function toggleFavorite(productId, event) {
-            if(event) event.stopPropagation(); // Evitar click en la card
+            if(event) event.stopPropagation(); 
             const index = state.favorites.indexOf(productId);
             if (index > -1) {
                 state.favorites.splice(index, 1);
@@ -869,44 +1014,103 @@
             }
             saveState();
             
-            // Re-renderizar si estamos en vistas que dependen de esto
             if(state.currentView === 'shop') renderShop();
             if(state.currentView === 'home') renderHome();
             if(state.currentView === 'product') renderProductDetail();
             if(state.currentView === 'favorites') renderFavoritesView();
         }
 
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            // Simulacion simple (acepta cualquiera para el demo)
-            state.user = { name: email.split('@')[0], email: email };
-            saveState();
-            showToast("¡Bienvenido de nuevo!");
-            navigate('profile');
+        // --- SOLICITUD DE VELA PERSONALIZADA ---
+        function getMinCustomDeliveryDate() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            today.setDate(today.getDate() + 3);
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         }
 
-        function handleRegister(e) {
-            e.preventDefault();
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            state.user = { name, email };
-            saveState();
-            showToast("¡Cuenta creada con éxito!");
-            navigate('profile');
+        function setupCustomDeliveryDate() {
+            const input = document.getElementById('custom-delivery-date');
+            const help = document.getElementById('custom-date-help');
+            if (!input) return;
+
+            const minDate = getMinCustomDeliveryDate();
+            input.min = minDate;
+            input.value = '';
+
+            const [year, month, day] = minDate.split('-');
+            help.innerText = `La fecha más próxima disponible es ${day}/${month}/${year}.`;
         }
 
-        function handleLogout() {
-            state.user = null;
-            saveState();
-            navigate('home');
-            showToast("Sesión cerrada");
+        function previewCustomImage(event) {
+            const file = event.target.files?.[0];
+            const preview = document.getElementById('custom-image-preview');
+            const image = document.getElementById('custom-image-preview-img');
+            if (!file || !file.type.startsWith('image/')) {
+                preview.classList.add('hidden');
+                image.src = '';
+                return;
+            }
+
+            image.src = URL.createObjectURL(file);
+            preview.classList.remove('hidden');
+        }
+
+        function handleCustomCandleRequest(e) {
+            e.preventDefault();
+
+            const purpose = document.getElementById('custom-purpose').value.trim();
+            const size = document.getElementById('custom-size').value;
+            const aroma = document.getElementById('custom-aroma').value;
+            const quantity = document.getElementById('custom-quantity').value;
+            const deliveryDate = document.getElementById('custom-delivery-date').value;
+            const imageInput = document.getElementById('custom-image');
+            const minDate = getMinCustomDeliveryDate();
+
+            if (deliveryDate < minDate) {
+                showToast('La fecha debe tener al menos 3 días de anticipación.');
+                document.getElementById('custom-delivery-date').min = minDate;
+                return;
+            }
+
+            const imageName = imageInput?.files?.[0]?.name || 'No se adjuntó imagen';
+            const [year, month, day] = deliveryDate.split('-');
+            const formattedDate = `${day}/${month}/${year}`;
+
+            let message = `Hola MARGIE CANDLES, quiero solicitar una vela personalizada:
+
+`;
+            message += `🕯️ *Propósito / Ocasión:* ${purpose}
+`;
+            message += `📐 *Tamaño:* ${size}
+`;
+            message += `🌸 *Aroma:* ${aroma}
+`;
+            message += `🔢 *Unidades requeridas:* ${quantity}
+`;
+            message += `📅 *Fecha de entrega:* ${formattedDate}
+`;
+            message += `🖼️ *Imagen de referencia:* ${imageName}
+
+`;
+            message += `La imagen de referencia se enviará por este mismo chat de WhatsApp.`;
+
+            const whatsappUrl = `https://wa.me/50374750007?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+
+            if (imageInput?.files?.length) {
+                showToast('Adjunta la imagen de referencia manualmente en WhatsApp.');
+            }
         }
 
         function handleCheckout(e) {
             e.preventDefault();
             
-            const form = e.target;
+            
+            const orderNumber = generateOrderNumber();
+const form = e.target;
             const textInputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]');
             const name = textInputs[0].value + ' ' + textInputs[1].value;
             const email = textInputs[2].value;
@@ -915,9 +1119,8 @@
             const address = addressSelect ? addressSelect.value : 'No especificado';
             const paymentMethod = form.querySelector('input[name="payment"]:checked')?.parentElement?.innerText?.trim() || 'No especificado';
 
-            // Construir resumen detallado del pedido para WhatsApp
             let total = 0;
-            let orderSummary = `*¡Hola MARGIE CANDLES! Quiero realizar un pedido:*\n\n`;
+            let orderSummary = `Número de pedido: ${orderNumber}\n\n*¡Hola MARGIE CANDLES! Quiero realizar un pedido:*\n\n`;
             orderSummary += `👤 *Cliente:* ${name}\n`;
             orderSummary += `📞 *Teléfono:* ${phone}\n`;
             orderSummary += `✉️ *Email:* ${email}\n`;
@@ -930,7 +1133,7 @@
                 if (p) {
                     const itemTotal = p.price * item.quantity;
                     total += itemTotal;
-                    orderSummary += `• ${item.quantity}x ${p.name} ($${itemTotal.toFixed(2)})\n`;
+                    orderSummary += `• ${item.quantity}x ${p.name}${item.size ? ` — Tamaño: ${item.size}` : ''}${item.aroma ? ` — Aroma: ${item.aroma}` : ''} ($${itemTotal.toFixed(2)})\n`;
                 }
             });
 
@@ -942,25 +1145,21 @@
             btn.disabled = true;
 
             setTimeout(() => {
-                const orderId = 'MARG-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-                document.getElementById('order-number').innerText = orderId;
+                document.getElementById('order-number').innerText = orderNumber;
                 
-                // Abrir enlace de WhatsApp con el número +50377190952
-                const whatsappUrl = `https://wa.me/50377190952?text=${encodeURIComponent(orderSummary)}`;
+                const whatsappUrl = `https://wa.me/50374750007?text=${encodeURIComponent(orderSummary)}`;
                 window.open(whatsappUrl, '_blank');
 
-                // Limpiar carrito y guardar estado
                 state.cart = [];
                 saveState();
                 
-                // Mostrar pantalla de éxito
                 navigate('success');
                 btn.innerHTML = originalText;
                 btn.disabled = false;
             }, 800);
         }
 
-        // --- 6. UTILIDADES (UI Helpers, Filtros) ---
+        // --- 6. UTILIDADES ---
 
         function showToast(message) {
             const container = document.getElementById('toast-container');
@@ -981,45 +1180,52 @@
 
         function updateWhatsAppLink() {
             const btn = document.getElementById('whatsapp-btn');
-            const baseNumber = "50377190952";
+            const baseNumber = "50374750007";
             let text = "Hola MARGIE, me gustaría hacer una consulta.";
             
             if (state.cart.length > 0) {
                 text = "Hola MARGIE, quiero consultar por estos productos de mi carrito:\n";
                 state.cart.forEach(item => {
                     const p = productos.find(prod => prod.id === item.productId);
-                    if(p) text += `- ${item.quantity}x ${p.name}\n`;
+                    if(p) text += `- ${item.quantity}x ${p.name}${item.size ? ` — Tamaño: ${item.size}` : ''}${item.aroma ? ` — Aroma: ${item.aroma}` : ''}\n`;
                 });
             }
             
             btn.href = `https://wa.me/${baseNumber}?text=${encodeURIComponent(text)}`;
         }
 
-        // Generar filtros de categoría dinámicamente
         function setupFilters() {
+            // Extraer categorias únicas de los productos ya cargados
             const cats = [...new Set(productos.map(p => p.category))];
             const catContainer = document.getElementById('category-filters');
             
+            // Limpiar filtros previos excepto "Todas"
+            catContainer.innerHTML = '<li><label class="flex items-center gap-2 cursor-pointer hover:text-brand-gold"><input type="radio" name="cat" value="all" checked class="accent-brand-gold"> Todas</label></li>';
+
             cats.forEach(c => {
-                const li = document.createElement('li');
-                li.innerHTML = `<label class="flex items-center gap-2 cursor-pointer hover:text-brand-gold"><input type="radio" name="cat" value="${c}" class="accent-brand-gold"> ${c}</label>`;
-                catContainer.appendChild(li);
+                // Previene que se rendericen categorias nulas o vacías
+                if(c) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<label class="flex items-center gap-2 cursor-pointer hover:text-brand-gold"><input type="radio" name="cat" value="${c}" class="accent-brand-gold"> ${c}</label>`;
+                    catContainer.appendChild(li);
+                }
             });
 
-            // Listeners
             catContainer.addEventListener('change', (e) => {
                 if(e.target.name === 'cat') { state.shopFilters.category = e.target.value; renderShop(); }
             });
-            document.getElementById('search-input').addEventListener('input', (e) => {
-                state.shopFilters.query = e.target.value; renderShop();
-            });
-            document.getElementById('sort-select').addEventListener('change', (e) => {
-                state.shopFilters.sort = e.target.value; renderShop();
-            });
-            document.getElementById('btn-show-offers').addEventListener('click', () => {
-                state.shopFilters.offersOnly = !state.shopFilters.offersOnly; renderShop();
-            });
         }
+
+        // Listeners estáticos
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            state.shopFilters.query = e.target.value; renderShop();
+        });
+        document.getElementById('sort-select').addEventListener('change', (e) => {
+            state.shopFilters.sort = e.target.value; renderShop();
+        });
+        document.getElementById('btn-show-offers').addEventListener('click', () => {
+            state.shopFilters.offersOnly = !state.shopFilters.offersOnly; renderShop();
+        });
 
         // Efecto scroll nav
         window.addEventListener('scroll', () => {
@@ -1028,18 +1234,32 @@
             else { nav.classList.remove('shadow-md'); }
         });
 
-        // --- 7. INICIALIZACIÓN (Boot) ---
+        // --- 7. INICIALIZACIÓN (Boot Async) ---
         document.addEventListener('DOMContentLoaded', () => {
-            setupFilters();
-            renderHome();
-            updateUI();
-            
-            // Simular carga para elegancia
-            setTimeout(() => {
-                const loader = document.getElementById('loader');
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 500);
-            }, 800); // Pequeña demora para apreciar el logo
+            // Iniciar extracción de datos
+            setupCustomDeliveryDate();
+        cargarProductosDesdeGoogle().then(() => {
+                // Cuando termine, armamos el sitio
+                setupFilters();
+                renderHome();
+                updateUI();
+                
+                // Retirar pantalla de carga suavemente
+                setTimeout(() => {
+                    const loader = document.getElementById('loader');
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.style.display = 'none', 500);
+                }, 600); 
+
+            }).catch((error) => {
+                console.error("Falla crítica en carga de catálogo:", error);
+                const loaderContent = document.getElementById('loader-content');
+                loaderContent.innerHTML = `
+                    <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+                    <h1 class="font-serif text-xl text-brand-brown">Error de conexión</h1>
+                    <p class="text-sm text-gray-500 mt-2">No pudimos conectar con el catálogo en vivo.<br>Por favor, recargue la página.</p>
+                `;
+            });
         });
 
     </script>
